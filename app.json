@@ -1,18 +1,39 @@
 {
-  "name": "tf-webhook-demo",
+  "name": "typeform-identity-integration",
   "description": "A demo of typeform's webhook, posting reading suggestions to a Slack channel",
   "env": {
-    "SLACK_INCOMING_WEBHOOK": {
-      "description": "Skack incoming webhook URL"
+    "IDENTITY_URL": {
+      "description": "URL to Identity API route for creating a member action"
+    },
+    "IDENTITY_API_TOKEN": {
+      "description": "Authorization token from Identity"
+    },
+    "TYPEFORM_FORM_URL": {
+      "description": "URL to the TypeForm form we download responses for"
+    },
+    "TYPEFORM_API_TOKEN": {
+      "description": "Authorization token from TypeForm"
+    },
+    "TYPEFORM_UNTIL": {
+      "description": "ISO time string after which responses are ignored"
+    },
+    "MEMBER_ACTION_NAME": {
+      "description": "Name of the action that will be recorded in Identity"
+    },
+    "MEMBER_ACTION_DESCRIPTION": {
+      "description": "Description of the action that will be recorded in Identity"
     },
     "EMAIL_ID": {
-      "description": "ID of the typeform's email field"
+      "description": "ID of the TypeForm's email field"
     },
-    "LINK_ID": {
-      "description": "ID of the typeform's link field"
+    "FIRST_NAME_ID": {
+      "description": "ID of the Typeform firstname field"
     },
-    "DESCRIPTION_ID": {
-      "description": "ID of the typeform's description field"
+    "LAST_NAME_ID": {
+      "description": "ID of the TypeForm's lastname field"
+    },
+    "POSTCODE_ID": {
+      "description": "ID of the TypeForm's postcode field"
     }
   }
 }

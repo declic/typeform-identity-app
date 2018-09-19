@@ -1,117 +1,77 @@
-# Typeform webhooks demo
+# Integration of TypeForm with Identity
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+This app retrieves responses from TypeForm and registers them in Identity as member actions.
 
-We'll walk though Typeform's webhooks, and for that we'll create a basic typeform integration with Slack. The integration consists of a typeform to suggest readings and post those suggestions in a Slack channel.
+## Instalation
 
-## Create a typeform
+This is a simple node app that has 2 main components:
+ - a webhook that is triggered on TypeForm submit which processes the response instantly
+ - a script executed on demand for processing historical responses
 
-Create a typeform with the following blocks:
+Clone the app. Using `node  >= v8.0.0` run:
 
-1. [email] [required] What is your email address?
-1. [website] [required] Which is the link of the reading(e.g. blog post, book)?
-1. [long text] Why do you think this is an interesting reading?
+```
+npm install
+```
 
-Now go to the webhooks panel, introduce a valid URL(e.g. http://example.org) 
-and hit "test webhook". A request with status and payload will appear in `recent requests`. Click on the payload id of the request. It will show a JSON content which was sent via POST to http://example.org (if you can't see it, try to click on the payload in a Firefox browser). You may copy it into an editor that supports json (something like https://jsoneditoronline.org):
+Configure the env params:
 
 ```json
+
 {
-  "event_id": "hQJi65uTRz",
-  "event_type": "form_response",
-  "form_response": {
-    "form_id": "R5ZNfR",
-    "token": "4969bac7b56e83a82ad060f0ae57faed",
-    "submitted_at": "2017-04-01T15:03:07Z",
-    "definition": {
-      "id": "R5ZNfR",
-      "title": "Reading suggestion box",
-      "fields": [
-        {
-          "id": "EE0L",
-          "title": "What is your email address?",
-          "type": "email"
-        },
-        {
-          "id": "TFzu",
-          "title": "Which is the link of the reading(e.g. blog post, book)?",
-          "type": "website"
-        },
-        {
-          "id": "v3Zc",
-          "title": "Why do you think this is an interesting reading",
-          "type": "long_text"
-        }
-      ]
+  "env": {
+    "IDENTITY_URL": {
+      "description": "URL to Identity API route for creating a member action"
     },
-    "answers": [
-      {
-        "type": "email",
-        "email": "an_account@example.com",
-        "field": {
-          "id": "EE0L",
-          "type": "email"
-        }
-      },
-      {
-        "type": "url",
-        "url": "http://example-url.com",
-        "field": {
-          "id": "TFzu",
-          "type": "website"
-        }
-      },
-      {
-        "type": "text",
-        "text": "Lorem ipsum dolor",
-        "field": {
-          "id": "v3Zc",
-          "type": "long_text"
-        }
-      }
-    ]
+    "IDENTITY_API_TOKEN": {
+      "description": "Authorization token from Identity"
+    },
+    "TYPEFORM_FORM_URL": {
+      "description": "URL to the TypeForm form we download responses for"
+    },
+    "TYPEFORM_API_TOKEN": {
+      "description": "Authorization token from TypeForm"
+    },
+    "MEMBER_ACTION_NAME": {
+      "description": "Name of the action that will be recorded in Identity"
+    },
+    "MEMBER_ACTION_DESCRIPTION": {
+      "description": "Description of the action that will be recorded in Identity"
+    },
+    "EMAIL_ID": {
+      "description": "ID of the TypeForm's email field"
+    },
+    "FIRST_NAME_ID": {
+      "description": "ID of the Typeform firstname field"
+    },
+    "LAST_NAME_ID": {
+      "description": "ID of the TypeForm's lastname field"
+    },
+    "POSTCODE_ID": {
+      "description": "ID of the TypeForm's postcode field"
+    }
   }
 }
 ```
 
-For the next step you'll need to know the information about the fields
-(*form_response.definition.fields*), in this example:
- 
- ```json
-[
-     {
-       "id": "EE0L",
-       "title": "What is your email address?",
-       "type": "email"
-     },
-     {
-       "id": "TFzu",
-       "title": "Which is the link of the reading(e.g. blog post, book)?",
-       "type": "website"
-     },
-     {
-       "id": "v3Zc",
-       "title": "Why do you think this is an interesting reading",
-       "type": "long_text"
-     }
-]
+For example values see `.env.example`.
+
+`EMAIL_ID`, `LAST_NAME_ID` etc. refer to the field ID of the TypeForm questions whose answers provide the required values. If a member with this email already exists in Identity, his/her details will be updated with these values and a new member action will be recorded.
+If there is no member with the given email, it will be created with the new action as an entry point.
+
+## Usage
+
+To process the historical responses just use the following command with an optional ending time:
+
+```
+TYPEFORM_UNTIL=2018-09-18T06:46:36 node ./processors.js
 ```
 
-## Create an incoming webhook
+To use the webhook you will have to deploy the app on Heroku, configure the env parameters and simply run:
 
-Create an [incoming webhook](https://my.slack.com/services/new/incoming-webhook/) on the slack board where you want to post the suggestions.
+```
+npm start
+```
 
-## Deploy a proxy application in Heroku 
-As you've seen above typeform payload is as generic as possible. We now need an application with a publicly available url which will translate typeform post requests into a slack incoming webhooks. A ready Heroku template for creating such an app is already in place.
-
-Go [here](https://github.com/kooso/tf-webhooks-demo) and click on the "Deploy
- to Heroku button". Introduce required config:
-
-- **SLACK_INCOMING_WEBHOOK**: go to the incoming webhook that you just created and copy the "Webhook URL".
-- **Fields IDs(EMAIL_ID, LINK_ID and DESCRIPTION_ID)**: search in the payload of the test the form definition and find the ID for all the fields, in our example the IDs are EE0L, TFzu and v3Zc.
-
-When then done, click in "Manage app" button, "Settings" tab and search by "Your app can be found at"; this is the URL that you'll use as the endpoint for your webhooks.
-
-## Configure your typeform to send webhooks
-
-To to your typeform webhooks settings(Configure->Webhooks). In destination paste the URL of your application and click on "Test Webhook", a message should be posted in the slack channel. Now enable the webhook and from now all the responses to your typeform will be posted in the Slack channel
+Then using the new Heroku URL, you have to register your webhook on TypeForm [as described here](https://developer.typeform.com/webhooks/reference/create-or-update-webhook/).
+If all goes well, every form answer that is submitted should turn into a record in Identity.
