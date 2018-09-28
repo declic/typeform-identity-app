@@ -2,10 +2,10 @@
 
 This app retrieves responses from TypeForm and registers them in Identity as member actions.
 
-## Instalation
+## Installation
 
 This is a simple node app that has 2 main components:
- - a webhook that is triggered on TypeForm submit which processes the response instantly
+ - a webhook that is triggered on a TypeForm form submit which processes the response instantly
  - a script executed on demand for processing historical responses
 
 Clone the app. Using `node  >= v8.0.0` run:
