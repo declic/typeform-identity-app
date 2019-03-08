@@ -49,6 +49,18 @@ Configure the env params:
     },
     "POSTCODE_ID": {
       "description": "ID of the TypeForm's postcode field"
+    },
+    "CONSENT_ID": {
+      "description": "ID of the TypeForm's consent field"
+    },
+    "CONSENTED_TEXT": {
+      "description": "The text of the answer in typeform that indicates a user has consented i.e. I accept"
+    },
+    "IDENTITY_CONSENT_PUBLIC_ID": {
+      "description": "public id of the opt-in gdpr consent in identity"
+    },
+    "IDENTITY_PRIVACY_PUBLIC_ID": {
+      "description": "public id of the implicit privacy consent in identity"
     }
   }
 }

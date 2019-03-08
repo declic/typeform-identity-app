@@ -23,7 +23,22 @@ function createMemberAction(parsedForm) {
         }
       ]
     },
+    "consents": [
+      {
+        "public_id": process.env.IDENTITY_PRIVACY_PUBLIC_ID,
+        "consent_level": "implicit",
+        "consent_method": "implicit",
+        "consent_method_option": null
+      },
+      {
+        "public_id": process.env.IDENTITY_CONSENT_PUBLIC_ID,
+        "consent_level": (parsedForm.consent === process.env.CONSENTED_TEXT ? 4 : 1),
+        "consent_method": "radio_buttons",
+        "consent_method_option": parsedForm.consent
+      }
+    ],
   }
+
   return request({
     method: 'POST',
     uri: process.env.IDENTITY_URL,
