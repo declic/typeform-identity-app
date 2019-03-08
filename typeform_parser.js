@@ -32,7 +32,7 @@ function extractValueForFieldOfId(response, id, fieldKey) {
   return extractAnswers(answerData[0], fieldKey);
 }
 
-function extractAnswers() {
+function extractAnswers(response) {
   const rawAnswerData = _.get(response, 'answers', []);
 
   return rawAnswerData.map(answer =>
