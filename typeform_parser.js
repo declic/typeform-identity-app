@@ -34,6 +34,7 @@ function extractValueForFieldOfId(response, id, fieldKey) {
 }
 
 function extractAnswers(response) {
+  console.log(response);
   const rawAnswerData = _.get(response, 'answers', []);
   const questions = questionTexts(_.get(response, 'definition.fields', []))
 
