@@ -62,9 +62,10 @@ function answerValue(answerData, fieldKey) {
 
 function questionTexts(questionData) {
   var questions = {}
+  console.log(questionData);
   questionData.forEach(function(question) {
     questions[question['id']] = question['title'];
   })
-
+  console.log(questions);
   return questions;
 }
