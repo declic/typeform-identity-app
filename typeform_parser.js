@@ -34,8 +34,8 @@ function extractValueForFieldOfId(response, id, fieldKey) {
 }
 
 function extractAnswers(response) {
-  console.log(response);
-  const rawAnswerData = _.get(response, 'answers', []);
+  const rawAnswerData = _.get(response, 'answers', [])
+                         .filter(a => !Object.values(mapOfFieldIds).includes(a.field.id));
   const questions = questionTexts(_.get(response, 'definition.fields', []))
 
   return rawAnswerData.map(answer =>
@@ -63,10 +63,9 @@ function answerValue(answerData, fieldKey) {
 
 function questionTexts(questionData) {
   var questions = {}
-  console.log(questionData);
   questionData.forEach(function(question) {
     questions[question['id']] = question['title'];
   })
-  console.log(questions);
+
   return questions;
 }
