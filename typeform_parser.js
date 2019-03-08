@@ -29,7 +29,7 @@ function extractValueForFieldOfId(response, id, fieldKey) {
     return null;
   }
 
-  return extractAnswers(answerData[0], fieldKey);
+  return answerValue(answerData[0], fieldKey);
 }
 
 function extractAnswers(response) {
@@ -39,12 +39,12 @@ function extractAnswers(response) {
     ({
       id: answer['field']['id'],
       type: answer['type'],
-      value: extractAnswers(answer, answer['type'])
+      value: answerValue(answer, answer['type'])
     })
   );
 }
 
-function extractAnswer(answerData, fieldKey) {
+function answerValue(answerData, fieldKey) {
   console.log(answerData);
   console.log(fieldKey);
   let answer = answerData[fieldKey]
