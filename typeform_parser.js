@@ -45,6 +45,8 @@ function extractAnswers(response) {
 }
 
 function extractAnswer(answerData, fieldKey) {
+  console.log(answerData);
+  console.log(fieldKey);
   let answer = answerData[fieldKey]
 
   if (fieldKey === 'choices') {
