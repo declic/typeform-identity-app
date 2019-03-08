@@ -20,6 +20,7 @@ function parseTypeFormResponse(response) {
     answers: extractAnswers(response)
   }
 }
+module.exports = parseTypeFormResponse;
 
 function extractValueForFieldOfId(response, id, fieldKey) {
   const answerData = _.get(response, 'answers', []).filter(a => a.field.id === id);
@@ -34,10 +35,12 @@ function extractValueForFieldOfId(response, id, fieldKey) {
 
 function extractAnswers(response) {
   const rawAnswerData = _.get(response, 'answers', []);
+  const questions = questionTexts(_.get(response, 'fields', []))
 
   return rawAnswerData.map(answer =>
     ({
       id: answer['field']['id'],
+      text: questions[answer['field']['id']],
       type: answer['type'],
       value: answerValue(answer, answer['type'])
     })
@@ -45,8 +48,6 @@ function extractAnswers(response) {
 }
 
 function answerValue(answerData, fieldKey) {
-  console.log(answerData);
-  console.log(fieldKey);
   let answer = answerData[fieldKey]
 
   if (fieldKey === 'choices') {
@@ -59,4 +60,11 @@ function answerValue(answerData, fieldKey) {
   return answer;
 }
 
-module.exports = parseTypeFormResponse;
+function questionTexts(questionData) {
+  var questions = {}
+  questionData.forEach(function(question) {
+    questions[question['id']] = question['title'];
+  })
+
+  return questions;
+}
