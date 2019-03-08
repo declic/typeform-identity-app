@@ -17,6 +17,7 @@ function parseTypeFormResponse(response) {
     lastname: extractValueForFieldOfId(response, mapOfFieldIds.lastname, "text"),
     postcode: extractValueForFieldOfId(response, mapOfFieldIds.postcode, "text"),
     consent: extractValueForFieldOfId(response, mapOfFieldIds.consent, "choice"),
+    answers: extractAnswers(response)
   }
 }
 
@@ -28,13 +29,30 @@ function extractValueForFieldOfId(response, id, fieldKey) {
     return null;
   }
 
-  var answer = answerData[0][fieldKey]
+  return extractAnswers(answerData[0], fieldKey);
+}
+
+function extractAnswers() {
+  const rawAnswerData = _.get(response, 'answers', []);
+  var parsedAnswerData = []
+
+  return rawAnswerData.map(answer =>
+    {
+      id: answer['field']['id'],
+      type: answer['type'],
+      value: extractAnswers(answer, answer['type']);
+    }
+  );
+}
+
+function extractAnswer(answerData, fieldKey) {
+  let answer = answerData[fieldKey]
 
   if (fieldKey === 'choices') {
-    answer = answer['labels'].join(',');
+    return answer['labels'].join(',');
   }
-  if (fieldKey === 'choice') {
-    answer = answer['label'];
+  else if (fieldKey === 'choice') {
+    return answer['label'];
   }
 
   return answer;

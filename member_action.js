@@ -37,6 +37,15 @@ function createMemberAction(parsedForm) {
         "consent_method_option": parsedForm.consent
       }
     ],
+    "survey_responses": parsedForm.answers.map(answer =>
+      {
+        question: {
+          text: answer['id'], // Next step if this works is to get the actual name
+          qtype: answer['type']
+        },
+        answer: answer['value']
+      }
+    )
   }
 
   return request({
