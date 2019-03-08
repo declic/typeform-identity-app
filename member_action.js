@@ -38,13 +38,13 @@ function createMemberAction(parsedForm) {
       }
     ],
     "survey_responses": parsedForm.answers.map(answer =>
-      {
+      ({
         question: {
           text: answer['id'], // Next step if this works is to get the actual name
           qtype: answer['type']
         },
         answer: answer['value']
-      }
+      })
     )
   }
 

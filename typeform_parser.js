@@ -34,14 +34,13 @@ function extractValueForFieldOfId(response, id, fieldKey) {
 
 function extractAnswers() {
   const rawAnswerData = _.get(response, 'answers', []);
-  var parsedAnswerData = []
 
   return rawAnswerData.map(answer =>
-    {
+    ({
       id: answer['field']['id'],
       type: answer['type'],
-      value: extractAnswers(answer, answer['type']);
-    }
+      value: extractAnswers(answer, answer['type'])
+    })
   );
 }
 
